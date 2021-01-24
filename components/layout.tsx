@@ -3,8 +3,8 @@ import styles from './layout.module.css'
 import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 
-const name = 'Mau'
-export const siteTitle = 'Sample Website'
+const name = 'wado'
+export const siteTitle = '忘れても良いように'
 
 export default function Layout({
   children,
@@ -19,7 +19,7 @@ export default function Layout({
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="description"
-          content="Learn how to build a personal website using Next.js"
+          content="忘れていく記憶をメモしています"
         />
         <meta
           property="og:image"
