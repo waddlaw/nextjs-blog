@@ -12,5 +12,7 @@ tag: 'NEXT.js'
 
 - [jonschlinkert/gray-matter](https://github.com/jonschlinkert/gray-matter)
 - [remarkjs/remark](https://github.com/remarkjs/remark)
+- [css-modules/css-modules](https://github.com/css-modules/css-modules)
+- [date-fns/date-fns](https://github.com/date-fns/date-fns)
 
 ちょっとずつ改良していこうと思う。
