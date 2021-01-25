@@ -8,14 +8,15 @@ const postsDirectory = path.join(process.cwd(), 'posts')
 
 export function getSortedPostsData() {
   // Get file names under /posts
-  const fileNames = fs.readdirSync(postsDirectory)
-  const allPostsData = fileNames
-    .map(fileName => {
+  const filepaths = listFiles(postsDirectory)
+  const allPostsData = filepaths
+    .map(fullPath => {
+
       // Remove ".md" from file name to get id
+      const fileName = fullPath.match(new RegExp(postsDirectory + '\/(.*)'))[1].replace(/\//,'-')
       const id = fileName.replace(/\.md$/, '')
 
       // Read markdown file as string
-      const fullPath = path.join(postsDirectory, fileName)
       const fileContents = fs.readFileSync(fullPath, 'utf8')
 
       // Use gray-matter to parse the post metadata section
@@ -38,32 +39,19 @@ export function getSortedPostsData() {
 }
 
 export function getAllPostIds() {
-  const fileNames = fs.readdirSync(postsDirectory)
-
-  // Returns an array that looks like this:
-  // [
-  //   {
-  //     params: {
-  //       id: 'ssg-ssr'
-  //     }
-  //   },
-  //   {
-  //     params: {
-  //       id: 'pre-rendering'
-  //     }
-  //   }
-  // ]
-  return fileNames.map(fileName => {
+  const fileNames = listFiles(postsDirectory)
+  
+  return fileNames.map(fullpath => {
     return {
       params: {
-        id: fileName.replace(/\.md$/, '')
+        id: fullpath.match(new RegExp(postsDirectory + '\/(.*)'))[1].replace(/\//,'-').replace(/\.md$/, '')
       }
     }
   })
 }
 
 export async function getPostData(id: string) {
-  const fullPath = path.join(postsDirectory, `${id}.md`)
+  const fullPath = path.join(postsDirectory, `${id}.md`.replace('-', '/'))
   const fileContents = fs.readFileSync(fullPath, 'utf8')
 
   // Use gray-matter to parse the post metadata section
@@ -82,3 +70,8 @@ export async function getPostData(id: string) {
     ...(matterResult.data as { date: string; title: string })
   }
 }
+
+const listFiles = (dir: string): string[] =>
+  fs.readdirSync(dir, { withFileTypes: true }).flatMap(dirent =>
+    dirent.isFile() ? [`${dir}/${dirent.name}`] : listFiles(`${dir}/${dirent.name}`)
+  )
