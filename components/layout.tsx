@@ -29,6 +29,10 @@ export default function Layout({
         />
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism-tomorrow.min.css"
+          rel="stylesheet"
+        />
       </Head>
       <header className={styles.header}>
         {home ? (
