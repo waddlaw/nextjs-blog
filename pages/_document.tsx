@@ -28,6 +28,7 @@ class MyDocument extends Document {
               />
             </>
           )}
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" />
         </Head>
         <Head />
         <body>
