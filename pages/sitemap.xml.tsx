@@ -32,7 +32,7 @@ async function generateSitemapXml():Promise<string> {
     xml += `
       <url>
         <loc>${appHost}posts/${id}</loc>
-        <lastmod>${id}</lastmod>
+        <lastmod>${id.slice(0,-2)}</lastmod>
       </url>
     `
   })
