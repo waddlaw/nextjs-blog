@@ -1,0 +1,37 @@
+{-# LANGUAGE InstanceSigs #-}
+import Data.Bifunctor (bimap, first, second)
+import Control.Monad (join)
+
+h0 :: ()
+h0 = ()
+
+h1 :: a1 -> b1 -> (a1, b1)
+h1 = (,)
+
+h2 :: (a1 -> a2) -> (b1 -> b2) -> (a1, b1) -> (a2, b2)
+h2 = bimap
+
+h3 :: (a1 -> a2 -> a3) -> (b1 -> b2 -> b3) -> (a1, b1) -> (a2, b2) -> (a3, b3)
+h3 f g = uncurry bimap . bimap f g
+
+newtype WriterT w m a = WriterT { runWriterT :: m (a, w) }
+
+instance Functor m => Functor (WriterT w m) where
+  fmap :: (a -> b) -> WriterT w m a -> WriterT w m b
+  fmap f = WriterT . fmap (first f) . runWriterT
+
+instance (Applicative m, Monoid w) => Applicative (WriterT w m) where
+  pure :: a -> WriterT w m a
+  pure = WriterT . pure . second (const mempty) . join (,)
+
+  (<*>) :: WriterT w m (a -> b) -> WriterT w m a -> WriterT w m b
+  mf <*> ma = WriterT $ h <$> runWriterT mf <*> runWriterT ma
+    where
+      -- h (f, w1) (a, w2) = (f a, w1 <> w2)
+      h = uncurry bimap . bimap ($) (<>)
+
+h :: (a1 -> a2 -> a3) -> (b1 -> b2 -> b3) -> (a1, b1) -> (a2, b2) -> (a3, b3)
+h f g (a1, b1) (a2, b2) = (f a1 a2, g b1 b2)
+
+h' :: (a1 -> a2) -> (b1 -> b2) -> (a1, b1) -> (a2, b2)
+h' f g = bimap f g
